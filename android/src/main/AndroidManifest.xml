@@ -1,0 +1,19 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  package="com.bluechilli.pushnotification">
+
+    <application>
+        <service android:name=".FlutterFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.google.firebase.iid.TOKEN_REFRESH"/>
+            </intent-filter>
+
+        </service>
+    </application>
+
+</manifest>

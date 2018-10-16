@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1032344837803",
+    "firebase_url": "https://pushnotificationexample-219504.firebaseio.com",
+    "project_id": "pushnotificationexample-219504",
+    "storage_bucket": "pushnotificationexample-219504.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1032344837803:android:d21ddfcab18c546b",
+        "android_client_info": {
+          "package_name": "com.bluechilli.pushnotificationexample"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1032344837803-o5seg2ihp1e6d6k32lsjbaq5ophh7v86.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA23Ky9E0xutYEtqqU8Mx2UJWNjSTAvrpI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
