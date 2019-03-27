@@ -16,7 +16,7 @@ To use this plugin, add below to pubspec.yaml
 ```yaml
 push_notification:
   git:
-    url: git@github.com:BlueChilli/push_notification_plugin.git
+    url: https://github.com/BlueChilli/push_notification_plugin.git
 ```
 
 ## Getting Started
