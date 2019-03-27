@@ -84,7 +84,7 @@ public class SwiftPushNotificationPlugin: NSObject, FlutterPlugin, UNUserNotific
     public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [AnyHashable : Any] = [:]) -> Bool {
 
         if(_launchNotification != nil) {
-            _launchNotification = launchOptions[UIApplicationLaunchOptionsKey.remoteNotification] as! NSDictionary?;
+            _launchNotification = launchOptions[UIApplication.LaunchOptionsKey.remoteNotification] as! NSDictionary?;
         }
         
         return true;
