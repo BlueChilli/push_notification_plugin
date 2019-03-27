@@ -11,6 +11,9 @@ Note: This plugin is still under development, and some APIs might not be availab
 
 ---
 
+This is written in swift
+when you create the flutter project use -i swift option
+
 To use this plugin, add below to pubspec.yaml
 
 ```yaml
