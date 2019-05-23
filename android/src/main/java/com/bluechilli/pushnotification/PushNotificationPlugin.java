@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.core.content.SharedPreferencesCompat;
 import android.util.Log;
 
 import com.google.firebase.FirebaseApp;
@@ -33,6 +32,7 @@ public class PushNotificationPlugin extends BroadcastReceiver implements MethodC
   private static final String CLICK_ACTION_VALUE = "FLUTTER_NOTIFICATION_CLICK";
   private static final String PUSH_NOTIFICATION_PLUGIN_SHARED_PREFERENCE = "com.bluechilli.plugins.pushnotification";
   private static final String PLUGIN_IDENTIFIER = "com.bluechilli.plugins/push_notification";
+  private static final String TAG = "PushNotificationPlugin";
 
   public static void registerWith(Registrar registrar) {
     final MethodChannel channel = new MethodChannel(registrar.messenger(), PLUGIN_IDENTIFIER);
@@ -57,13 +57,13 @@ public class PushNotificationPlugin extends BroadcastReceiver implements MethodC
   @Override
   public void onReceive(Context context, Intent intent) {
     String action = intent.getAction();
-    Log.d("push notification plugin", "onReceive");
+    Log.d(TAG, "onReceive");
     if (action == null) {
       return;
     }
 
     if (action.equals(FlutterFirebaseMessagingService.ACTION_TOKEN)) {
-      Log.d("push notification plugin", "token recieved");
+      Log.d(TAG, "token recieved");
       String token = intent.getStringExtra(FlutterFirebaseMessagingService.EXTRA_TOKEN);
       if (token != null) {
         Log.d("token", token);
@@ -71,7 +71,7 @@ public class PushNotificationPlugin extends BroadcastReceiver implements MethodC
         channel.invokeMethod("onToken", token);
       }
     } else if (action.equals(FlutterFirebaseMessagingService.ACTION_REMOTE_MESSAGE)) {
-      Log.d("push notification plugin", "message recieved");
+      Log.d(TAG, "message recieved");
       RemoteMessage message = intent.getParcelableExtra(FlutterFirebaseMessagingService.EXTRA_REMOTE_MESSAGE);
       Map<String, Object> content = parseRemoteMessage(message);
       channel.invokeMethod("onMessage", content);
@@ -119,13 +119,12 @@ public class PushNotificationPlugin extends BroadcastReceiver implements MethodC
 
   @Override
   public boolean onNewIntent(Intent intent) {
-    Log.d("Plugin", "OnNewIntent");
     boolean res = sendMessageFromIntent("onResume", intent);
     if (res && registrar.activity() != null) {
-      Log.d("Plugin", "OnNewIntent => true");
+      Log.d(TAG, "OnNewIntent => true");
       registrar.activity().setIntent(intent);
     } else {
-      Log.d("Plugin", "OnNewIntent => false");
+      Log.d(TAG, "OnNewIntent => false");
     }
 
     return res;

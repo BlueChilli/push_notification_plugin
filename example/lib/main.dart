@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:push_notification/push_notification.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+const String channelId = "com.bluechilli.pushnotification.plugin.channel";
+const String channelName = "PushNotificationPlugin";
+const String channelDesc = "PushNotificationPlugin";
 
 void main() => runApp(new MyApp());
 
@@ -17,6 +23,8 @@ class _MyAppState extends State<MyApp> {
 
   PushNotification notification = PushNotification();
   StreamSubscription<String> _tokenSubscripition;
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      new FlutterLocalNotificationsPlugin();
 
   @override
   void initState() {
@@ -37,6 +45,12 @@ class _MyAppState extends State<MyApp> {
     _tokenSubscripition = null;
 
     super.dispose();
+  }
+
+  Future _onSelectNotification(String payload) async {
+    if (payload != null) {
+      debugPrint('notification payload: ' + payload);
+    }
   }
 
   Future<void> initNotification() async {
@@ -63,9 +77,32 @@ class _MyAppState extends State<MyApp> {
 
         notification.setCategories([category]);
 
-        notification.configure(onMessage: (data) {
+        notification.configure(onMessage: (data) async {
           print("OnMessage");
           print(data.toString());
+
+          if (Platform.isAndroid) {
+            var initializationSettingsAndroid =
+                new AndroidInitializationSettings('ic_launcher');
+            var initializationSettingsIOS = new IOSInitializationSettings();
+            var initializationSettings = new InitializationSettings(
+                initializationSettingsAndroid, initializationSettingsIOS);
+            flutterLocalNotificationsPlugin.initialize(initializationSettings,
+                onSelectNotification: _onSelectNotification);
+            var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+                channelId, channelName, channelDesc,
+                importance: Importance.Max,
+                priority: Priority.High,
+                ticker: 'ticker');
+            var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+            var platformChannelSpecifics = NotificationDetails(
+                androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+            var notification = data["notification"];
+            var payload = data["data"];
+            await flutterLocalNotificationsPlugin.show(0, notification["title"],
+                notification["body"], platformChannelSpecifics,
+                payload: payload["shiftId"]);
+          }
         }, onLaunch: (data) {
           print("onLaunch");
           print(data.toString());
@@ -107,7 +144,7 @@ class _MyAppState extends State<MyApp> {
                   ? Text("Notification has been granted")
                   : Text("Notification has been denied"),
               Container(height: 20.0),
-              Text("Push token is ${_token}")
+              Text("Push token is $_token")
             ],
           ),
         ),
