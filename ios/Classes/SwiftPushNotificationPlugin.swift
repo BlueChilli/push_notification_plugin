@@ -7,7 +7,7 @@ public class SwiftPushNotificationPlugin: NSObject, FlutterPlugin, UNUserNotific
     var _channel: FlutterMethodChannel
 
     var _resumeFromBackground:Bool;
-    var _launchNotification: NSDictionary?;
+    var _launchNotification: [AnyHashable : Any]?;
  
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "com.bluechilli.plugins/push_notification", binaryMessenger: registrar.messenger())
@@ -83,9 +83,7 @@ public class SwiftPushNotificationPlugin: NSObject, FlutterPlugin, UNUserNotific
     
     public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [AnyHashable : Any] = [:]) -> Bool {
 
-        if(_launchNotification != nil) {
-            _launchNotification = launchOptions[UIApplication.LaunchOptionsKey.remoteNotification] as! NSDictionary?;
-        }
+        _launchNotification = launchOptions[UIApplication.LaunchOptionsKey.remoteNotification] as? [AnyHashable : Any];
         
         return true;
     }
@@ -248,8 +246,12 @@ public class SwiftPushNotificationPlugin: NSObject, FlutterPlugin, UNUserNotific
             UIApplication.shared.registerForRemoteNotifications();
         }
         
+        
+        NSLog("configure method");
         if (_launchNotification != nil) {
-            _channel.invokeMethod("onLaunch", arguments:_launchNotification);
+            NSLog("onLaunch \(_launchNotification!)");
+            _channel.invokeMethod("onLaunch", arguments:getParamters(userInfo: _launchNotification!));
+            _launchNotification = nil;
         }
         
         result(nil);

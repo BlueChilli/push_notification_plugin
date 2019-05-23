@@ -22,6 +22,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     _tokenSubscripition = notification.onTokenRefresh.listen((token) {
+      print(token);
       setState(() {
         _token = token;
       });
