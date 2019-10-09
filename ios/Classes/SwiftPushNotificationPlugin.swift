@@ -116,17 +116,35 @@ public class SwiftPushNotificationPlugin: NSObject, FlutterPlugin, UNUserNotific
     }
     
     public func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        let token:NSData = NSData.init(data: deviceToken);
-        var trimmedDeviceToken = token.description;
+        var trimmedDeviceToken:String = "";
         
-        if (!trimmedDeviceToken.isNullOrWhitespace())
-        {
-            trimmedDeviceToken = trimmedDeviceToken.trimmingCharacters(in: CharacterSet.init(charactersIn:"<"));
-            trimmedDeviceToken = trimmedDeviceToken.trimmingCharacters(in: CharacterSet.init(charactersIn:">"));
-            trimmedDeviceToken = trimmedDeviceToken.trimmingCharacters(in: .whitespaces);
-            trimmedDeviceToken = trimmedDeviceToken.replacingOccurrences(of: " ", with: "");
-            _channel.invokeMethod("onToken", arguments: trimmedDeviceToken);
+        if #available(iOS 13.0, *) {
+            trimmedDeviceToken = getStringFrom(deviceToken: deviceToken)
         }
+        else {
+            let token:NSData = NSData.init(data: deviceToken);
+             trimmedDeviceToken = token.description;
+            
+            if (!trimmedDeviceToken.isNullOrWhitespace())
+            {
+                trimmedDeviceToken = trimmedDeviceToken.trimmingCharacters(in: CharacterSet.init(charactersIn:"<"));
+                trimmedDeviceToken = trimmedDeviceToken.trimmingCharacters(in: CharacterSet.init(charactersIn:">"));
+                trimmedDeviceToken = trimmedDeviceToken.trimmingCharacters(in: .whitespaces);
+                trimmedDeviceToken = trimmedDeviceToken.replacingOccurrences(of: " ", with: "");
+            }
+        }
+        
+        if (!trimmedDeviceToken.isNullOrWhitespace()) {
+          _channel.invokeMethod("onToken", arguments: trimmedDeviceToken);
+        }
+    }
+    
+    private func getStringFrom(deviceToken: Data) -> String {
+        var token = ""
+        for i in 0..<deviceToken.count {
+            token += String(format: "%02.2hhx", arguments: [deviceToken[i]])
+        }
+        return token
     }
     
     private func getParamters(userInfo:[AnyHashable : Any]) -> [AnyHashable : Any] {
