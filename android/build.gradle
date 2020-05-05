@@ -32,6 +32,6 @@ android {
         disable 'InvalidPackage'
     }
     dependencies {
-        api 'com.google.firebase:firebase-messaging:18.0.0'
+        api 'com.google.firebase:firebase-messaging:20.1.6'
     }
 }
